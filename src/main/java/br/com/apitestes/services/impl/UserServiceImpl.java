@@ -41,6 +41,13 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 	
+	@Override
+	public User update(UserDTO userDTO) {
+		User user = mapper.map(userDTO, User.class);
+		findByEmail(userDTO);
+		return userRepository.save(user);
+	}
+	
 	private void findByEmail(UserDTO userDTO){
 		Optional<User> userOp = userRepository.findByEmail(userDTO.getEmail());
 		
@@ -50,13 +57,5 @@ public class UserServiceImpl implements UserService {
 					"Email %s já cadastrado", userDTO.getEmail()));
 		});
 	}
-
-	@Override
-	public User update(UserDTO userDTO) {
-		User user = mapper.map(userDTO, User.class);
-		findByEmail(userDTO);
-		return userRepository.save(user);
-	}
-	
 
 }
