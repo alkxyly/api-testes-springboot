@@ -48,6 +48,13 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 	
+
+	@Override
+	public void delete(Integer id) {
+		findById(id);
+		userRepository.deleteById(id);
+	}
+	
 	private void findByEmail(UserDTO userDTO){
 		Optional<User> userOp = userRepository.findByEmail(userDTO.getEmail());
 		
@@ -57,6 +64,7 @@ public class UserServiceImpl implements UserService {
 					"Email %s já cadastrado", userDTO.getEmail()));
 		});
 	}
+
 
 }
 

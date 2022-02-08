@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +26,15 @@ import br.com.apitestes.services.UserService;
 @RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserResource {
 	
+	private static final String ID = "/{id}";
+
 	@Autowired
 	private UserService userService;
 	
 	@Autowired
 	private ModelMapper mapper;
 	
-	@GetMapping("/{id}")
+	@GetMapping(ID)
 	public ResponseEntity<UserDTO> findById(@PathVariable Integer id){
 		return ResponseEntity.ok().body(mapper.map(userService.findById(id), UserDTO.class));
 	}
@@ -49,17 +52,23 @@ public class UserResource {
 		
 		User user = userService.create(userDTO);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{id}")
+				.path(ID)
 				.buildAndExpand(user.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 		
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(ID)
 	public ResponseEntity<UserDTO> update(@PathVariable Integer id, @RequestBody UserDTO userDTO){
 		userDTO.setId(id);
 		User user = userService.update(userDTO);
 		return ResponseEntity.ok(mapper.map(user, UserDTO.class));
+	}
+	
+	@DeleteMapping(ID)
+	public ResponseEntity<UserDTO> delete(@PathVariable Integer id){
+		userService.delete(id);
+		return ResponseEntity.noContent().build();
 	}
 	
 }
