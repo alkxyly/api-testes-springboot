@@ -6,12 +6,12 @@ import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import br.com.apitestes.domain.User;
 import br.com.apitestes.domain.dto.UserDTO;
 import br.com.apitestes.repositories.UserRepository;
 import br.com.apitestes.services.UserService;
+import br.com.apitestes.services.exceptions.DataIntegratyViolationException;
 import br.com.apitestes.services.exceptions.ObjectNotFoundException;
 
 @Service
@@ -37,9 +37,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User create(UserDTO userDTO) {
 		User user = mapper.map(userDTO, User.class);
+		findByEmail(userDTO);
 		return userRepository.save(user);
 	}
 	
+	private void findByEmail(UserDTO userDTO){
+		Optional<User> userOp = userRepository.findByEmail(userDTO.getEmail());
+		
+		userOp.ifPresent( x -> {
+			throw new  DataIntegratyViolationException(String.format(
+					"Email %s já cadastrado", userDTO.getEmail()));
+		});
+	}
 	
 
 }
