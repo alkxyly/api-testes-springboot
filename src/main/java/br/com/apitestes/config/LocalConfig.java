@@ -23,4 +23,6 @@ public class LocalConfig {
 		User user2 = new User(null, "José", "jose2@gmail.com", "123456");
 		userRepository.saveAll(List.of(user, user2));
 	}
+	
+	
 }
