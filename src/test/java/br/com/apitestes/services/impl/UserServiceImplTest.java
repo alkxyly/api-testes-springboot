@@ -126,4 +126,19 @@ class UserServiceImplTest {
 			assertEquals("Email "+EMAIL+" já cadastrado", e.getMessage());
 		}
 	}
+	
+	
+	@Test
+	void whenUpdateThenReturnSuccess() {
+		when(userRepository.save(any())).thenReturn(user);
+		
+		User user = service.update(userDTO);
+		
+		assertNotNull(user);
+		assertEquals(User.class, user.getClass());
+		assertEquals(ID, user.getId());
+		assertEquals(NAME, user.getName());
+		assertEquals(EMAIL, user.getEmail());
+		assertEquals(PASSWORD, user.getPassword());
+	}
 }
