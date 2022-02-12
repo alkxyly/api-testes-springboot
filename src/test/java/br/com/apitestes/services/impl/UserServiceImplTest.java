@@ -1,11 +1,11 @@
 package br.com.apitestes.services.impl;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.apitestes.domain.User;
 import br.com.apitestes.domain.dto.UserDTO;
 import br.com.apitestes.repositories.UserRepository;
+import br.com.apitestes.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
 class UserServiceImplTest {
@@ -67,6 +68,15 @@ class UserServiceImplTest {
 		assertEquals(EMAIL, response.getEmail());
 	}
 
+	@Test
+	void whenFindByIdThenReturnAnObjectNotFoundException() {
+		when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
 
-
+		try {
+			service.findById(ID);
+		}catch (Exception e) {
+			assertEquals(ObjectNotFoundException.class, e.getClass());
+			assertEquals(e.getMessage(), "Objeto não encontrado");
+		}
+	}
 }
