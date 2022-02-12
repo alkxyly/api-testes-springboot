@@ -131,7 +131,6 @@ class UserServiceImplTest {
 		}
 	}
 	
-	
 	@Test
 	void whenUpdateThenReturnSuccess() {
 		when(userRepository.save(any())).thenReturn(user);
@@ -165,5 +164,17 @@ class UserServiceImplTest {
 		doNothing().when(userRepository).deleteById(anyInt());
 		service.delete(ID);
 		verify(userRepository, times(1)).deleteById(anyInt());
+	}
+	
+	@Test
+	void whenDeleteObjectNotFoundException() {
+		when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NÃO_ENCONTRADO));
+		
+		try {
+			service.delete(ID);
+		}catch (Exception e) {
+			assertEquals(ObjectNotFoundException.class, e.getClass());
+			assertEquals(OBJETO_NÃO_ENCONTRADO, e.getMessage());
+		}
 	}
 }
