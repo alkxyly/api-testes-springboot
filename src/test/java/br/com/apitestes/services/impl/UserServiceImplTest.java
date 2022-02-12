@@ -23,10 +23,11 @@ import br.com.apitestes.services.exceptions.ObjectNotFoundException;
 @SpringBootTest
 class UserServiceImplTest {
 
+	private static final int ID          = 1;
+	private static final String NAME     = "jose";
 	private static final String PASSWORD = "123456";
 	private static final String EMAIL    = "jose@gmail.com";
-	private static final String NAME     = "jose";
-	private static final int ID          = 1;
+	private static final String OBJETO_NÃO_ENCONTRADO = "Objeto não encontrado";
 
 	@InjectMocks
 	private UserServiceImpl service;
@@ -70,13 +71,13 @@ class UserServiceImplTest {
 
 	@Test
 	void whenFindByIdThenReturnAnObjectNotFoundException() {
-		when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException("Objeto não encontrado"));
+		when(userRepository.findById(anyInt())).thenThrow(new ObjectNotFoundException(OBJETO_NÃO_ENCONTRADO));
 
 		try {
 			service.findById(ID);
 		}catch (Exception e) {
 			assertEquals(ObjectNotFoundException.class, e.getClass());
-			assertEquals(e.getMessage(), "Objeto não encontrado");
+			assertEquals(e.getMessage(), OBJETO_NÃO_ENCONTRADO);
 		}
 	}
 }
