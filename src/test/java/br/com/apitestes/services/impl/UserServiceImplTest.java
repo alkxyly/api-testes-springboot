@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import br.com.apitestes.domain.User;
 import br.com.apitestes.domain.dto.UserDTO;
 import br.com.apitestes.repositories.UserRepository;
+import br.com.apitestes.services.exceptions.DataIntegratyViolationException;
 import br.com.apitestes.services.exceptions.ObjectNotFoundException;
 
 @SpringBootTest
@@ -111,5 +112,18 @@ class UserServiceImplTest {
 		assertEquals(NAME, user.getName());
 		assertEquals(EMAIL, user.getEmail());
 		assertEquals(PASSWORD, user.getPassword());
+	}
+	
+	@Test
+	void whenCreateThenReturnAnDataIntegrityViolationException() {
+		when(userRepository.findByEmail(anyString())).thenReturn(userOptional);
+		
+		try {
+			userOptional.get().setId(2);
+			service.create(userDTO);
+		}catch (Exception e) {
+			assertEquals(DataIntegratyViolationException.class, e.getClass());
+			assertEquals("Email "+EMAIL+" já cadastrado", e.getMessage());
+		}
 	}
 }
