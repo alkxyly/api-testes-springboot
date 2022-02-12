@@ -2,7 +2,7 @@ package br.com.apitestes.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -12,10 +12,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.stereotype.Repository;
 
 import br.com.apitestes.domain.User;
 import br.com.apitestes.domain.dto.UserDTO;
@@ -97,5 +97,19 @@ class UserServiceImplTest {
 		assertEquals(NAME, users.get(INDEX).getName());
 		assertEquals(EMAIL, users.get(INDEX).getEmail());
 		assertEquals(PASSWORD, users.get(INDEX).getPassword());
+	}
+	
+	@Test
+	void whenCreateThenReturnSuccess() {
+		when(userRepository.save(any())).thenReturn(user);
+		
+		User user = service.create(userDTO);
+		
+		assertNotNull(user);
+		assertEquals(User.class, user.getClass());
+		assertEquals(ID, user.getId());
+		assertEquals(NAME, user.getName());
+		assertEquals(EMAIL, user.getEmail());
+		assertEquals(PASSWORD, user.getPassword());
 	}
 }
