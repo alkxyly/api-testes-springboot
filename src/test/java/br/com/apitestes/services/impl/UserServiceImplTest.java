@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -154,5 +157,13 @@ class UserServiceImplTest {
 			assertEquals(DataIntegratyViolationException.class, e.getClass());
 			assertEquals("Email "+EMAIL+" já cadastrado", e.getMessage());
 		}
+	}
+	
+	@Test
+	void whenDeleteThenReturnSuccess() {
+		when(userRepository.findById(anyInt())).thenReturn(userOptional);
+		doNothing().when(userRepository).deleteById(anyInt());
+		service.delete(ID);
+		verify(userRepository, times(1)).deleteById(anyInt());
 	}
 }
