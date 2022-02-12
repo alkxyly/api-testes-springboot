@@ -2,17 +2,18 @@ package br.com.apitestes.services.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeEach;	
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -140,5 +141,18 @@ class UserServiceImplTest {
 		assertEquals(NAME, user.getName());
 		assertEquals(EMAIL, user.getEmail());
 		assertEquals(PASSWORD, user.getPassword());
+	}
+	
+	@Test
+	void whenUpdateThenReturnAnDataIntegrityViolationException() {
+		when(userRepository.findByEmail(anyString())).thenReturn(userOptional);
+		
+		try {
+			userOptional.get().setId(2);
+			service.create(userDTO);
+		}catch (Exception e) {
+			assertEquals(DataIntegratyViolationException.class, e.getClass());
+			assertEquals("Email "+EMAIL+" já cadastrado", e.getMessage());
+		}
 	}
 }
