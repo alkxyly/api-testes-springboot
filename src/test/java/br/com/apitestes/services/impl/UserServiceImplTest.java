@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.stereotype.Repository;
 
 import br.com.apitestes.domain.User;
 import br.com.apitestes.domain.dto.UserDTO;
@@ -23,6 +25,7 @@ import br.com.apitestes.services.exceptions.ObjectNotFoundException;
 @SpringBootTest
 class UserServiceImplTest {
 
+	private static final int INDEX = 0;
 	private static final int ID          = 1;
 	private static final String NAME     = "jose";
 	private static final String PASSWORD = "123456";
@@ -79,5 +82,20 @@ class UserServiceImplTest {
 			assertEquals(ObjectNotFoundException.class, e.getClass());
 			assertEquals(e.getMessage(), OBJETO_NÃO_ENCONTRADO);
 		}
+	}
+	
+	@Test
+	void whenFindAllThenReturnAnListOfUsers() {
+		when(userRepository.findAll()).thenReturn(List.of(user));
+		List<User> users = service.findAll();
+		
+		assertNotNull(users);
+		assertEquals(1, users.size());
+		assertEquals(User.class, users.get(INDEX).getClass());
+		
+		assertEquals(ID, users.get(INDEX).getId());
+		assertEquals(NAME, users.get(INDEX).getName());
+		assertEquals(EMAIL, users.get(INDEX).getEmail());
+		assertEquals(PASSWORD, users.get(INDEX).getPassword());
 	}
 }
