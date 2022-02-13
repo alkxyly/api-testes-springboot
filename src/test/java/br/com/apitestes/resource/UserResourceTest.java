@@ -1,5 +1,8 @@
 package br.com.apitestes.resource;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doNothing;
@@ -10,9 +13,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,8 +35,6 @@ class UserResourceTest {
 	private static final String NAME     = "jose";
 	private static final String PASSWORD = "123456";
 	private static final String EMAIL    = "jose@gmail.com";
-	private static final String OBJETO_NÃO_ENCONTRADO = "Objeto não encontrado";
-
 	
 	@InjectMocks
 	private UserResource resource;
