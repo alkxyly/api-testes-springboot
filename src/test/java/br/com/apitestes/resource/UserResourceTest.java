@@ -2,6 +2,9 @@ package br.com.apitestes.resource;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -126,6 +129,20 @@ class UserResourceTest {
 		assertEquals(ID, response.getBody().getId());
 		assertEquals(EMAIL, response.getBody().getEmail());
 		assertEquals(NAME, response.getBody().getName());
+	}
+	
+	@Test
+	void whenDeleteThenReturnSuccess() {
+		doNothing().when(service).delete(anyInt());
+		
+		ResponseEntity<UserDTO> response = resource.delete(ID);
+		
+		assertNotNull(response);
+		verify(service, times(1)).delete(anyInt());
+		assertEquals(ResponseEntity.class, response.getClass());
+		assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+		
+		
 	}
 
 }
